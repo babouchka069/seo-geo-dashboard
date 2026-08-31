@@ -170,7 +170,7 @@ export default function Dashboard() {
         body: JSON.stringify({ prompt }),
       })
       const data = await res.json()
-      const text = data?.content?.[0]?.text ?? ''
+      const text = data?.text ?? ''
       setSynthesis(JSON.parse(text.replace(/```json|```/g, '').trim()))
     } catch { setSynthesisError('Erreur lors de la synth\u00e8se. R\u00e9essayez.') }
     setSynthesisLoading(false)
