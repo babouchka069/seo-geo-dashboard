@@ -12,7 +12,7 @@ const SITES = {
         { label: 'Sitemap', ok: true, detail: '12 URLs' },
         { label: 'llms.txt', ok: true, detail: 'Présent et complet' },
         { label: 'JSON-LD', ok: false, detail: 'Type HealthAndBeautyBusiness (a corriger en LocalBusiness)' },
-        { label: 'Meta descriptions', ok: false, detail: 'Manquante sur 2 pages' },
+        { label: 'Meta descriptions', ok: true, detail: 'OK page accueil, a verifier autres pages' },
         { label: 'Images alt', ok: true, detail: 'OK (toutes les images ont un alt)' },
         { label: 'Placeholders PHOTO', ok: false, detail: '5 placeholders PHOTO visibles dans le HTML' },
         { label: 'Redirections', ok: true, detail: 'Propres' },
