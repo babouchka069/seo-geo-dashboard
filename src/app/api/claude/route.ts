@@ -5,6 +5,7 @@ export async function POST(req: NextRequest) {
   if (!key) return NextResponse.json({ error: 'ANTHROPIC_API_KEY manquante' }, { status: 500 })
 
   const body = await req.json()
+  const prompt = body.prompt ?? body.messages?.map((m: {content: string}) => m.content).join('\n') ?? ''
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -14,12 +15,13 @@ export async function POST(req: NextRequest) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1000,
-      messages: body.messages,
+      messages: [{ role: 'user', content: prompt }],
     }),
   })
 
   const data = await res.json()
-  return NextResponse.json(data)
+  const text = data?.content?.[0]?.text ?? JSON.stringify(data)
+  return NextResponse.json({ text })
 }
