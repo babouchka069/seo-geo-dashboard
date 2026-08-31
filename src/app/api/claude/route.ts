@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   if (!geminiKey) return NextResponse.json({ error: 'Aucune cle API disponible' }, { status: 500 })
 
   const res = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=' + geminiKey,
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=' + geminiKey,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
