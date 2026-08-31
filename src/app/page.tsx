@@ -9,7 +9,7 @@ const SITES = {
     audit: {
       score: 74,
       auditDate: '31 août 2026',
-      scope: 'Audit live de 12 pages · grille fixe sur 100 points · performance non incluse',
+      scope: 'Audit live de 12 pages publiques · grille fixe sur 100 points · performance non incluse',
       items: [
         { label: 'Indexabilité & robots', ok: true, points: 10, max: 10, detail: 'HTTPS, robots.txt et pages accessibles' },
         { label: 'Sitemap', ok: false, points: 7, max: 10, detail: '8 pages listées sur 12 — 4 pages manquantes' },
