@@ -4,7 +4,6 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const prompt = body.prompt ?? ''
 
-  // Essaie Anthropic en premier
   const anthropicKey = process.env.ANTHROPIC_API_KEY
   if (anthropicKey) {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -25,12 +24,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ text })
   }
 
-  // Fallback Gemini
   const geminiKey = process.env.GEMINI_API_KEY
   if (!geminiKey) return NextResponse.json({ error: 'Aucune cle API disponible' }, { status: 500 })
 
   const res = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + geminiKey,
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=' + geminiKey,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
