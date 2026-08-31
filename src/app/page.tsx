@@ -7,14 +7,14 @@ const SITES = {
     url: 'ludi-lartetlamatiere.fr',
     queries: ['drainage lymphatique Cannes-la-Bocca', 'drainage Renata França Cannes', 'massage drainant post-opératoire Cannes'],
     audit: {
-      score: 78,
+      score: 72,
       items: [
         { label: 'Sitemap', ok: true, detail: '12 URLs' },
         { label: 'llms.txt', ok: true, detail: 'Présent et complet' },
-        { label: 'JSON-LD', ok: true, detail: 'LocalBusiness' },
+        { label: 'JSON-LD', ok: false, detail: 'Type HealthAndBeautyBusiness (a corriger en LocalBusiness)' },
         { label: 'Meta descriptions', ok: false, detail: 'Manquante sur 2 pages' },
-        { label: 'Images alt', ok: false, detail: '4 images sans alt' },
-        { label: 'Placeholder [NOM ORGANISME]', ok: false, detail: 'Remplacer par "Colibri"' },
+        { label: 'Images alt', ok: true, detail: 'OK (toutes les images ont un alt)' },
+        { label: 'Placeholders PHOTO', ok: false, detail: '5 placeholders PHOTO visibles dans le HTML' },
         { label: 'Redirections', ok: true, detail: 'Propres' },
         { label: 'Mobile', ok: true, detail: 'Responsive OK' },
         { label: 'Performance', ok: true, detail: '92/100 Lighthouse' },
