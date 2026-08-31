@@ -7,31 +7,34 @@ const SITES = {
     url: 'ludi-lartetlamatiere.fr',
     queries: ['drainage lymphatique Cannes-la-Bocca', 'drainage Renata França Cannes', 'massage drainant post-opératoire Cannes'],
     audit: {
-      score: 44,
+      score: 74,
+      auditDate: '31 août 2026',
+      scope: 'Audit live de 12 pages · grille fixe sur 100 points · performance non incluse',
       items: [
-        { label: 'Title', ok: true, detail: '10/10 — mot-clé + ville + marque' },
-        { label: 'Meta description', ok: true, detail: '9/10 — 160 caractères, bon contenu' },
-        { label: 'H1', ok: false, detail: '5/10 — pas de mot-clé principal ("drainage lymphatique")' },
-        { label: 'JSON-LD', ok: true, detail: '12/15 — corrigé ce soir (areaServed 4 villes, horaires, image supprimée)' },
-        { label: 'Open Graph / Twitter Card', ok: false, detail: '0/15 — totalement absent' },
-        { label: 'Canonical', ok: false, detail: '0/10 — absent sur la home' },
-        { label: 'Placeholders PHOTO', ok: false, detail: '0/15 — 6 placeholders visibles en prod' },
-        { label: 'Sitemap', ok: false, detail: '4/10 — 4 pages manquantes' },
-        { label: 'Technique (lang, viewport, favicon)', ok: false, detail: '4/5 — favicon 404' },
+        { label: 'Indexabilité & robots', ok: true, points: 10, max: 10, detail: 'HTTPS, robots.txt et pages accessibles' },
+        { label: 'Sitemap', ok: false, points: 7, max: 10, detail: '8 pages listées sur 12 — 4 pages manquantes' },
+        { label: 'URL canoniques', ok: false, points: 9, max: 10, detail: "11 pages sur 12 — accueil sans canonical" },
+        { label: 'Titres & meta descriptions', ok: true, points: 10, max: 10, detail: 'Présents sur les 12 pages auditées' },
+        { label: 'Titres H1', ok: false, points: 7, max: 10, detail: 'Cabinet sans H1 · accueil peu descriptif' },
+        { label: 'Données structurées JSON-LD', ok: false, points: 12, max: 15, detail: 'Schémas valides · horaires à harmoniser (19 h / 20 h)' },
+        { label: 'Open Graph & partage social', ok: false, points: 3, max: 10, detail: 'Partiel sur 4 articles · aucune image sociale' },
+        { label: 'Textes alternatifs des images', ok: true, points: 5, max: 5, detail: '13 images sur 13 avec attribut alt' },
+        { label: 'Photos & finition du contenu', ok: false, points: 3, max: 10, detail: '12 emplacements PHOTO visibles sur 3 pages' },
+        { label: 'Visibilité IA / GEO', ok: false, points: 8, max: 10, detail: 'llms.txt, FAQ et articles présents · cohérence à finaliser' },
       ],
       priorities: [
-        'Ajouter Open Graph (og:title, og:description, og:image)',
+        'Compléter le sitemap avec /articles et les 3 articles manquants',
         "Ajouter le canonical sur la page d'accueil",
-        'Compléter le sitemap (4 pages manquantes)',
-        'Ajouter un favicon',
-        'Remplacer les 6 placeholders PHOTO par de vraies photos',
+        'Ajouter une image Open Graph et compléter les aperçus sociaux',
+        'Harmoniser les horaires : 19 h dans llms.txt, 20 h dans le JSON-LD',
+        'Ajouter le favicon et remplacer les 12 emplacements PHOTO',
       ],
     },
     cal: [
-      { date: 'Fév 2025', title: 'Article : drains post-opératoires', type: 'soon', kind: 'Article' },
-      { date: 'Mars 2025', title: 'FAQ : drainage vs massage classique', type: 'planned', kind: 'FAQ' },
-      { date: 'Avr 2025', title: 'Article : drainage et grossesse', type: 'planned', kind: 'Article' },
-      { date: 'Mai 2025', title: 'Mise à jour photos cabinet', type: 'idea', kind: 'Média' },
+      { date: 'Immédiat', title: 'Sitemap + canonical accueil', type: 'urgent', kind: 'Technique' },
+      { date: 'Sept. 2026', title: 'Favicon + aperçus sociaux', type: 'soon', kind: 'Technique' },
+      { date: 'Sept. 2026', title: 'Ajouter les photos définitives', type: 'planned', kind: 'Média' },
+      { date: 'Oct. 2026', title: 'Audit Google Business Profile', type: 'idea', kind: 'Référencement local' },
     ],
   },
   thomas_cannes: {
@@ -99,6 +102,7 @@ const IA_ENGINES = [
 
 type SiteKey = keyof typeof SITES
 type Tab = 'audit' | 'ia' | 'cal'
+type AuditItem = { label: string; ok: boolean; detail: string; points?: number; max?: number }
 type Synthesis = {
   positif: string[]
   negatif: string[]
@@ -124,6 +128,13 @@ export default function Dashboard() {
   const [history, setHistory] = useState<{ date: string; engine: string; query: string; excerpt: string }[]>([])
 
   const d = SITES[site]
+  const auditItems = d.audit.items as AuditItem[]
+  const hasWeightedScore = auditItems.every(item => item.points !== undefined && item.max !== undefined)
+  const auditScore = hasWeightedScore
+    ? auditItems.reduce((total, item) => total + (item.points ?? 0), 0)
+    : d.audit.score
+  const auditDate = 'auditDate' in d.audit ? d.audit.auditDate : null
+  const auditScope = 'scope' in d.audit ? d.audit.scope : null
   const activeQuery = query || d.queries[0]
   const savedCount = Object.keys(saved).length
   const canSynthesize = savedCount >= 2
@@ -204,9 +215,9 @@ export default function Dashboard() {
         <div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: '1.5rem' }}>
             {[
-              { label: 'Score global', value: d.audit.score + '/100', color: d.audit.score >= 75 ? '#1D9E75' : '#EF9F27' },
-              { label: 'Points OK', value: d.audit.items.filter((i: {ok:boolean}) => i.ok).length + '/' + d.audit.items.length, color: '#1D9E75' },
-              { label: 'A corriger', value: String(d.audit.items.filter((i: {ok:boolean}) => !i.ok).length), color: '#EF9F27' },
+              { label: 'Score global', value: auditScore + '/100', color: auditScore >= 75 ? '#1D9E75' : '#EF9F27' },
+              { label: 'Critères validés', value: auditItems.filter(i => i.ok).length + '/' + auditItems.length, color: '#1D9E75' },
+              { label: 'À améliorer', value: String(auditItems.filter(i => !i.ok).length), color: '#EF9F27' },
             ].map(m => (
               <div key={m.label} style={{ background: '#f3f3f0', borderRadius: 8, padding: '1rem' }}>
                 <div style={{ fontSize: 12, color: '#888', marginBottom: 6 }}>{m.label}</div>
@@ -214,15 +225,25 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+          {(auditDate || auditScope) && (
+            <div style={{ padding: '10px 14px', background: '#EBF4FF', border: '1px solid #BDD7F5', borderRadius: 8, fontSize: 12, color: '#185FA5', marginBottom: '1rem', lineHeight: 1.5 }}>
+              <strong>Dernier audit : {auditDate}</strong>{auditScope ? ' · ' + auditScope : ''}
+            </div>
+          )}
           <div style={{ background: 'white', border: '1px solid #e5e5e5', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Points techniques</h2>
-            {d.audit.items.map((item: {label:string;ok:boolean;detail:string}) => (
-              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: 13 }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#444' }}>
+            {auditItems.map(item => (
+              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: 13 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#444', fontWeight: 500 }}>
                   <span style={{ color: item.ok ? '#1D9E75' : '#EF9F27' }}>{item.ok ? '✓' : '!'}</span>
                   {item.label}
                 </span>
-                <span style={{ color: '#999', fontSize: 12 }}>{item.detail}</span>
+                <span style={{ color: '#777', fontSize: 12, textAlign: 'right', flex: '1 1 320px' }}>
+                  {item.points !== undefined && item.max !== undefined && (
+                    <strong style={{ color: item.ok ? '#1D9E75' : '#EF9F27', marginRight: 8 }}>{item.points}/{item.max}</strong>
+                  )}
+                  {item.detail}
+                </span>
               </div>
             ))}
           </div>
