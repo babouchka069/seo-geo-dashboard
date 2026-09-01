@@ -62,7 +62,7 @@ const SITES = {
     cal: [
       { date: '1er sept. 2026', title: 'og:image reflux bébé déployée', type: 'planned', kind: 'Terminé' },
       { date: 'Sept. 2026', title: 'Audit Google Business Profile Cannes', type: 'soon', kind: 'Référencement local' },
-      { date: '1er sept. 2026', title: 'Lighthouse Fréjus : mobile 85 · bureau 100', type: 'planned', kind: 'Mesuré' },
+      { date: 'Sept. 2026', title: 'Mesure Lighthouse mobile Cannes', type: 'planned', kind: 'Performance' },
       { date: 'Oct. 2026', title: 'Contrôle indexation page locale Cannes', type: 'idea', kind: 'SEO local' },
     ],
   },
@@ -91,7 +91,7 @@ const SITES = {
     cal: [
       { date: '1er sept. 2026', title: 'og:image reflux bébé déployée', type: 'planned', kind: 'Terminé' },
       { date: 'Sept. 2026', title: 'Audit Google Business Profile Fréjus', type: 'soon', kind: 'Référencement local' },
-      { date: 'Sept. 2026', title: 'Mesure Lighthouse mobile', type: 'planned', kind: 'Performance' },
+      { date: '1er sept. 2026', title: 'Lighthouse Fréjus : mobile 85 · bureau 100', type: 'planned', kind: 'Mesuré' },
       { date: 'Oct. 2026', title: 'Contrôle indexation page locale Fréjus', type: 'idea', kind: 'SEO local' },
     ],
   },
